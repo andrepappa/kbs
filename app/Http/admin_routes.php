@@ -74,4 +74,9 @@ Route::group(['as' => $as, 'middleware' => ['auth', 'permission:ADMIN_PANEL']], 
 	/* ================== Wilayahs ================== */
 	Route::resource(config('laraadmin.adminRoute') . '/wilayahs', 'LA\WilayahsController');
 	Route::get(config('laraadmin.adminRoute') . '/wilayah_dt_ajax', 'LA\WilayahsController@dtajax');
+
+
+	/* ================== Rws ================== */
+	Route::resource(config('laraadmin.adminRoute') . '/rws', 'LA\RwsController');
+	Route::get(config('laraadmin.adminRoute') . '/rw_dt_ajax', 'LA\RwsController@dtajax');
 });
