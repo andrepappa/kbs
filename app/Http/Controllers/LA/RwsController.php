@@ -24,7 +24,7 @@ class RwsController extends Controller
 	public $show_action = true;
 	public $view_col = 'rw';
 	public $listing_cols = ['id', 'rw'];
-	
+
 	public function __construct() {
 		// Field Access of Listing Columns
 		if(\Dwij\Laraadmin\Helpers\LAHelper::laravel_ver() == 5.3) {
@@ -36,7 +36,7 @@ class RwsController extends Controller
 			$this->listing_cols = ModuleFields::listingColumnAccessScan('Rws', $this->listing_cols);
 		}
 	}
-	
+
 	/**
 	 * Display a listing of the Rws.
 	 *
@@ -45,7 +45,7 @@ class RwsController extends Controller
 	public function index()
 	{
 		$module = Module::get('Rws');
-		
+
 		if(Module::hasAccess($module->id)) {
 			return View('la.rws.index', [
 				'show_actions' => $this->show_action,
@@ -76,19 +76,19 @@ class RwsController extends Controller
 	public function store(Request $request)
 	{
 		if(Module::hasAccess("Rws", "create")) {
-		
+
 			$rules = Module::validateRules("Rws", $request);
-			
+
 			$validator = Validator::make($request->all(), $rules);
-			
+
 			if ($validator->fails()) {
 				return redirect()->back()->withErrors($validator)->withInput();
 			}
-			
+
 			$insert_id = Module::insert("Rws", $request);
-			
+
 			return redirect()->route(config('laraadmin.adminRoute') . '.rws.index');
-			
+
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
@@ -103,12 +103,12 @@ class RwsController extends Controller
 	public function show($id)
 	{
 		if(Module::hasAccess("Rws", "view")) {
-			
+
 			$rw = Rw::find($id);
 			if(isset($rw->id)) {
 				$module = Module::get('Rws');
 				$module->row = $rw;
-				
+
 				return view('la.rws.show', [
 					'module' => $module,
 					'view_col' => $this->view_col,
@@ -134,13 +134,13 @@ class RwsController extends Controller
 	 */
 	public function edit($id)
 	{
-		if(Module::hasAccess("Rws", "edit")) {			
+		if(Module::hasAccess("Rws", "edit")) {
 			$rw = Rw::find($id);
-			if(isset($rw->id)) {	
+			if(isset($rw->id)) {
 				$module = Module::get('Rws');
-				
+
 				$module->row = $rw;
-				
+
 				return view('la.rws.edit', [
 					'module' => $module,
 					'view_col' => $this->view_col,
@@ -166,19 +166,19 @@ class RwsController extends Controller
 	public function update(Request $request, $id)
 	{
 		if(Module::hasAccess("Rws", "edit")) {
-			
+
 			$rules = Module::validateRules("Rws", $request, true);
-			
+
 			$validator = Validator::make($request->all(), $rules);
-			
+
 			if ($validator->fails()) {
 				return redirect()->back()->withErrors($validator)->withInput();;
 			}
-			
+
 			$insert_id = Module::updateRow("Rws", $request, $id);
-			
+
 			return redirect()->route(config('laraadmin.adminRoute') . '.rws.index');
-			
+
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
@@ -194,14 +194,14 @@ class RwsController extends Controller
 	{
 		if(Module::hasAccess("Rws", "delete")) {
 			Rw::find($id)->delete();
-			
+
 			// Redirecting to index() method
 			return redirect()->route(config('laraadmin.adminRoute') . '.rws.index');
 		} else {
 			return redirect(config('laraadmin.adminRoute')."/");
 		}
 	}
-	
+
 	/**
 	 * Datatable Ajax fetch
 	 *
@@ -214,9 +214,9 @@ class RwsController extends Controller
 		$data = $out->getData();
 
 		$fields_popup = ModuleFields::getModuleFields('Rws');
-		
+
 		for($i=0; $i < count($data->data); $i++) {
-			for ($j=0; $j < count($this->listing_cols); $j++) { 
+			for ($j=0; $j < count($this->listing_cols); $j++) {
 				$col = $this->listing_cols[$j];
 				if($fields_popup[$col] != null && starts_with($fields_popup[$col]->popup_vals, "@")) {
 					$data->data[$i][$j] = ModuleFields::getFieldValue($fields_popup[$col], $data->data[$i][$j]);
@@ -228,13 +228,13 @@ class RwsController extends Controller
 				//    $data->data[$i][$j];
 				// }
 			}
-			
+
 			if($this->show_action) {
 				$output = '';
 				if(Module::hasAccess("Rws", "edit")) {
 					$output .= '<a href="'.url(config('laraadmin.adminRoute') . '/rws/'.$data->data[$i][0].'/edit').'" class="btn btn-warning btn-xs" style="display:inline;padding:2px 5px 3px 5px;"><i class="fa fa-edit"></i></a>';
 				}
-				
+
 				if(Module::hasAccess("Rws", "delete")) {
 					$output .= Form::open(['route' => [config('laraadmin.adminRoute') . '.rws.destroy', $data->data[$i][0]], 'method' => 'delete', 'style'=>'display:inline']);
 					$output .= ' <button class="btn btn-danger btn-xs" type="submit"><i class="fa fa-times"></i></button>';
